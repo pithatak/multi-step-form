@@ -1,10 +1,25 @@
+# ========================
+# IDE
+# ========================
+.idea/
+*.iml
 
-###> symfony/framework-bundle ###
-/.env.local
-/.env.local.php
-/.env.*.local
-/config/secrets/prod/prod.decrypt.private.php
-/public/bundles/
-/var/
-/vendor/
-###< symfony/framework-bundle ###
+# ========================
+# Docker
+# ========================
+/docker-compose.override.yml
+**/Dockerfile
+
+# ========================
+# Symfony
+# ========================
+.env
+.env.local
+.env.local.php
+.env.*.local
+var/
+vendor/
+public/bundles/
+
+/phpunit.xml
+/.phpunit.cache/
