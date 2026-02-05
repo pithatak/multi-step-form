@@ -8,7 +8,6 @@
 # Docker
 # ========================
 /docker-compose.override.yml
-**/Dockerfile
 
 # ========================
 # Symfony

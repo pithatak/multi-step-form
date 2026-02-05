@@ -16,6 +16,7 @@ echo "Running composer install..."
 composer install --no-interaction --prefer-dist
 
 echo "Running migrations..."
+php bin/console make:migration
 php bin/console doctrine:migrations:migrate --no-interaction || true
 
 echo "Starting application..."
