@@ -33,7 +33,7 @@ class User
     /**
      * @var Collection<int, WorkExperiences>
      */
-    #[ORM\OneToMany(targetEntity: WorkExperiences::class, mappedBy: 'profile')]
+    #[ORM\OneToMany(targetEntity: WorkExperiences::class, mappedBy: 'profile', cascade: ['persist', 'remove'])]
     private Collection $workExperiences;
 
     public function __construct()
