@@ -16,10 +16,10 @@ class WorkExperienceDTO
     public string $position;
 
     #[Assert\NotBlank]
-    #[Assert\Date]
+    #[Assert\Type(\DateTimeInterface::class)]
     public \DateTime $dateFrom;
     #[Assert\NotBlank]
-    #[Assert\Date]
+    #[Assert\Type(\DateTimeInterface::class)]
     public \DateTime $dateTo;
 
     #[Assert\Callback]

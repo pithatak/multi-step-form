@@ -23,8 +23,8 @@ class WorkExperiences
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTime $dateFrom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $dateTo = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTime $dateTo = null;
 
     #[ORM\ManyToOne(inversedBy: 'workExperiences')]
     #[ORM\JoinColumn(nullable: false)]
@@ -71,12 +71,12 @@ class WorkExperiences
         return $this;
     }
 
-    public function getDateTo(): ?string
+    public function getDateTo(): ?\DateTime
     {
         return $this->dateTo;
     }
 
-    public function setDateTo(string $dateTo): static
+    public function setDateTo(\DateTime $dateTo): static
     {
         $this->dateTo = $dateTo;
 

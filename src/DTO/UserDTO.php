@@ -15,7 +15,7 @@ class UserDTO
     public string $surname;
 
     #[Assert\NotBlank]
-    #[Assert\DateTime]
+    #[Assert\Type(\DateTimeInterface::class)]
     #[Assert\LessThan('today')]
     public ?\DateTime $birthday;
 }
