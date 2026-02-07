@@ -19,5 +19,8 @@ echo "Running migrations..."
 php bin/console make:migration
 php bin/console doctrine:migrations:migrate --no-interaction || true
 
+echo "Installing frontend dependencies..."
+RUN npm install
+
 echo "Starting application..."
 exec "$@"
