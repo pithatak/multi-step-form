@@ -8,12 +8,14 @@ class MultiEntityDTO
 {
     public function __construct(
         #[Assert\Valid]
-        public UserDTO    $user,
+        public UserDTO $user,
+
         #[Assert\Valid]
         public ContactDTO $contact,
+
+        /** @var WorkExperienceDTO[] */
         #[Assert\Valid]
         #[Assert\Count(min: 1)]
-        public array      $workExperiences = [])
-    {
-    }
+        public array $workExperiences = [],
+    ) {}
 }

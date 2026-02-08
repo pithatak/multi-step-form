@@ -7,20 +7,24 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class WorkExperienceDTO
 {
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 20, maxMessage: 'Company cannot be longer than {{ limit }} characters')]
-    public string $company;
+    public function __construct(
+        #[Assert\NotBlank]
+        #[Assert\Length(max: 20, maxMessage: 'Company cannot be longer than {{ limit }} characters')]
+        public string    $company,
 
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 20, maxMessage: 'Position cannot be longer than {{ limit }} characters')]
-    public string $position;
+        #[Assert\NotBlank]
+        #[Assert\Length(max: 20, maxMessage: 'Position cannot be longer than {{ limit }} characters')]
+        public string    $position,
 
-    #[Assert\NotBlank]
-    #[Assert\Type(\DateTimeInterface::class)]
-    public \DateTime $dateFrom;
-    #[Assert\NotBlank]
-    #[Assert\Type(\DateTimeInterface::class)]
-    public \DateTime $dateTo;
+        #[Assert\NotBlank]
+        #[Assert\Type(\DateTimeInterface::class)]
+        public ?\DateTime $dateFrom= null,
+        #[Assert\NotBlank]
+        #[Assert\Type(\DateTimeInterface::class)]
+        public ?\DateTime $dateTo = null
+    )
+    {
+    }
 
     #[Assert\Callback]
     public function validateDates(ExecutionContextInterface $context)

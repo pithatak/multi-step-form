@@ -28,16 +28,18 @@ class UserCreator
             ->setPhone($dto->contact->phone)
             ->setProfile($user);
 
-        foreach ($dto->workExperiences as $exp) {
-            $workExperiences = (new WorkExperiences())
-                ->setCompany($exp['company'])
-                ->setPosition($exp['position'])
-                ->setDateFrom(new \DateTime($exp['dateFrom']))
-                ->setDateTo(new \DateTime($exp['dateTo']))
+        foreach ($dto->workExperiences as $expDto) {
+
+            $work = (new WorkExperiences())
+                ->setCompany($expDto->company)
+                ->setPosition($expDto->position)
+                ->setDateFrom($expDto->dateFrom)
+                ->setDateTo($expDto->dateTo)
                 ->setProfile($user);
 
-            $user->addWorkExperience($workExperiences);
+            $user->addWorkExperience($work);
         }
+
 
         $user->setContact($contact);
 

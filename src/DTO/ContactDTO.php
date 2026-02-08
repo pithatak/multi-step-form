@@ -11,6 +11,11 @@ class ContactDTO
         #[Assert\Regex(pattern: '/^\+?[0-9]{9,15}$/')]
         public string $phone, #[Assert\NotBlank]
         #[Assert\Email]
+        #[Assert\Unique(
+            message: 'Email already exists.',
+            fields: ['email']
+        )]
         public string $email)
-    {}
+    {
+    }
 }

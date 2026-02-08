@@ -6,6 +6,7 @@
         <h3 class="text-xl font-semibold mb-2 text-gray-700">Basic Info</h3>
         <input v-model="formData.user.name" placeholder="First Name" class="input-field"/>
         <input v-model="formData.user.surname" placeholder="Last Name" class="input-field"/>
+        <label class="block text-sm text-gray-600">Birthday</label>
         <input type="date" v-model="formData.user.birthday" class="input-field"/>
       </div>
 
@@ -20,7 +21,9 @@
         <div v-for="(work, index) in formData.workExperiences" :key="index" class="mb-4 border p-4 rounded">
           <input v-model="work.company" placeholder="Company" class="input-field"/>
           <input v-model="work.position" placeholder="Position" class="input-field"/>
+          <label class="block text-sm text-gray-600">From</label>
           <input type="date" v-model="work.dateFrom" class="input-field"/>
+          <label class="block text-sm text-gray-600">To</label>
           <input type="date" v-model="work.dateTo" class="input-field"/>
           <button
               v-if="formData.workExperiences.length > 1"
@@ -34,8 +37,16 @@
           Add Work Experience
         </button>
       </div>
+
+      <div v-if="step === 4">
+        <h3 class="text-xl font-bold mb-4">Submitted data</h3>
+        <pre class="bg-gray-100 p-4 rounded text-sm">
+          {{ submittedData }}
+        </pre>
+      </div>
+
       <div v-if="errors">
-        <div v-for="(messages, field) in errors" :key="field">
+        <div v-for="(messages, field) in errors" :key="field" class="mt-6 border p-4 rounded">
           <p class="text-red-600">{{ field }}: {{ messages[0] }}</p>
         </div>
       </div>
@@ -74,7 +85,6 @@ import axios from 'axios';
 export default {
   setup() {
     const step = ref(1);
-
     const formData = reactive({
       user: {
         name: '',
@@ -94,8 +104,23 @@ export default {
         }
       ]
     });
+    const errors = ref(null)
+    const submittedData = ref(null)
 
-    const nextStep = () => step.value++;
+    const nextStep = () => {
+      if (step.value === 3) {
+        for (const w of formData.workExperiences) {
+          if (!w.company || !w.position) {
+            errors.value = {
+              'workExperiences': ['All work experience fields are required']
+            }
+            return
+          }
+        }
+      }
+
+      step.value++
+    }
     const prevStep = () => step.value--;
     const addWorkExperience = () => formData.workExperiences.push({
       company: '',
@@ -111,15 +136,26 @@ export default {
       try {
         const res = await axios.post('/api/user', formData);
         submittedData.value = res.data;
+        errors.value = '';
         step.value = 4;
       } catch (err) {
         if (err.response?.status === 422) {
-          this.errors = err.response.data;
+          errors.value = err.response.data;
         }
       }
     };
 
-    return {step, formData, nextStep, prevStep, addWorkExperience, removeWorkExperience, submitForm};
+    return {
+      step,
+      formData,
+      errors,
+      submittedData,
+      nextStep,
+      prevStep,
+      addWorkExperience,
+      removeWorkExperience,
+      submitForm
+    }
   }
 };
 </script>
