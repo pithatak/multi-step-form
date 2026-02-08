@@ -4,51 +4,53 @@ namespace App\Controller\Api;
 
 use App\DTO\MultiEntityDTO;
 use App\Service\UserCreator;
-use App\Type\MultiEntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class UserController extends AbstractController
 {
     #[Route('/api/user', methods: ['POST'])]
-    public function create(Request $request, UserCreator $userCreator): JsonResponse
-    {
-        $dto = new MultiEntityDTO();
-        $form = $this->createForm(MultiEntityType::class, $dto);
+    public function create(
+        Request $request,
+        SerializerInterface $serializer,
+        ValidatorInterface $validator,
+        UserCreator $userCreator
+    ): JsonResponse {
 
-        $form->handleRequest($request);
-        ;
-        if (!$form->isSubmitted()) {
-            return $this->json(['error' => 'Invalid request'], 400);
+        try {
+            /** @var MultiEntityDTO $dto */
+            $dto = $serializer->deserialize(
+                $request->getContent(),
+                MultiEntityDTO::class,
+                'json'
+            );
+        } catch (\Throwable) {
+            return $this->json(['error' => 'Invalid JSON'], 400);
         }
 
-        if (!$form->isValid()) {
-            return $this->json(
-                $this->getFormErrors($form),
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
+        $errors = $validator->validate($dto);
+        if (count($errors) > 0) {
+            return $this->json($this->mapErrors($errors), 422);
         }
 
         $userCreator->createFullUser($dto);
 
-        return $this->json(['status' => 'created'], Response::HTTP_CREATED);
+        return $this->json(['status' => 'created'], 201);
     }
 
-    private function getFormErrors(FormInterface $form): array
+    private function mapErrors(ConstraintViolationListInterface $errors): array
     {
-        $errors = [];
+        $result = [];
 
-        foreach ($form->getErrors(true) as $error) {
-            $property = $error->getOrigin()->getName();
-            $errors[$property][] = $error->getMessage();
+        foreach ($errors as $error) {
+            $result[$error->getPropertyPath()][] = $error->getMessage();
         }
 
-        return [
-            'errors' => $errors,
-        ];
+        return $result;
     }
 }

@@ -1,18 +1,18 @@
 <template>
   <div class="min-h-screen bg-gradient-to-b from-blue-100 to-blue-200 flex items-center justify-center">
     <div class="wizard bg-white p-8 rounded-xl shadow-xl w-full max-w-lg font-sans">
-      <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">User Form Wizard</h2>
+      <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Profile registration form</h2>
       <div v-if="step === 1">
         <h3 class="text-xl font-semibold mb-2 text-gray-700">Basic Info</h3>
-        <input v-model="formData.firstName" placeholder="First Name" class="input-field"/>
-        <input v-model="formData.lastName" placeholder="Last Name" class="input-field"/>
-        <input type="date" v-model="formData.birthDate" class="input-field"/>
+        <input v-model="formData.user.name" placeholder="First Name" class="input-field"/>
+        <input v-model="formData.user.surname" placeholder="Last Name" class="input-field"/>
+        <input type="date" v-model="formData.user.birthday" class="input-field"/>
       </div>
 
       <div v-if="step === 2">
         <h3 class="text-xl font-semibold mb-2 text-gray-700">Contact Info</h3>
-        <input v-model="formData.email" placeholder="Email" class="input-field"/>
-        <input v-model="formData.phone" placeholder="Phone" class="input-field"/>
+        <input v-model="formData.contact.email" placeholder="Email" class="input-field"/>
+        <input v-model="formData.contact.phone" placeholder="Phone" class="input-field"/>
       </div>
 
       <div v-if="step === 3">
@@ -33,6 +33,11 @@
         <button @click="addWorkExperience" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded">
           Add Work Experience
         </button>
+      </div>
+      <div v-if="errors">
+        <div v-for="(messages, field) in errors" :key="field">
+          <p class="text-red-600">{{ field }}: {{ messages[0] }}</p>
+        </div>
       </div>
 
       <div class="actions mt-6 flex justify-between">
@@ -71,12 +76,23 @@ export default {
     const step = ref(1);
 
     const formData = reactive({
-      firstName: '',
-      lastName: '',
-      birthDate: '',
-      email: '',
-      phone: '',
-      workExperiences: [{company: '', position: '', dateFrom: '', dateTo: ''}]
+      user: {
+        name: '',
+        surname: '',
+        birthday: ''
+      },
+      contact: {
+        email: '',
+        phone: ''
+      },
+      workExperiences: [
+        {
+          company: '',
+          position: '',
+          dateFrom: '',
+          dateTo: ''
+        }
+      ]
     });
 
     const nextStep = () => step.value++;
@@ -93,11 +109,13 @@ export default {
 
     const submitForm = async () => {
       try {
-        await axios.post('/api/user', formData);
-        alert('Form submitted successfully!');
+        const res = await axios.post('/api/user', formData);
+        submittedData.value = res.data;
+        step.value = 4;
       } catch (err) {
-        console.error(err);
-        alert('Error submitting form');
+        if (err.response?.status === 422) {
+          this.errors = err.response.data;
+        }
       }
     };
 

@@ -28,15 +28,18 @@ class UserCreator
             ->setPhone($dto->contact->phone)
             ->setProfile($user);
 
-        $workExperiences = (new WorkExperiences())
-            ->setCompany($dto->workExperience->company)
-            ->setPosition($dto->workExperience->position)
-            ->setDateFrom($dto->workExperience->dateFrom)
-            ->setDateTo($dto->workExperience->dateTo)
-            ->setProfile($user);
+        foreach ($dto->workExperiences as $exp) {
+            $workExperiences = (new WorkExperiences())
+                ->setCompany($exp['company'])
+                ->setPosition($exp['position'])
+                ->setDateFrom(new \DateTime($exp['dateFrom']))
+                ->setDateTo(new \DateTime($exp['dateTo']))
+                ->setProfile($user);
 
-        $user->setContact($contact)
-            ->addWorkExperience($workExperiences);
+            $user->addWorkExperience($workExperiences);
+        }
+
+        $user->setContact($contact);
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
