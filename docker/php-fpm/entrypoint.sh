@@ -21,6 +21,7 @@ php bin/console doctrine:migrations:migrate --no-interaction || true
 
 echo "Installing frontend dependencies..."
 npm install
+npm run dev
 
 echo "Starting application..."
 exec "$@"
