@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -23,6 +24,9 @@ Encore
     .addEntry('app', './assets/app.js')
     .enableVueLoader()
     .enablePostCssLoader()
+    .addAliases({
+        '@': path.resolve(__dirname, 'assets/app'),
+    })
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
