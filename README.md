@@ -76,27 +76,6 @@ The project follows **clean architecture principles**:
 
 ---
 
-## 🧪 Validation rules
-
-### Frontend
-
-* Required fields
-* Email regex
-* Phone regex: `^\+?[0-9]{9,15}$`
-* Date comparisons
-
-### Backend
-
-* `NotBlank`
-* `Email`
-* `Regex`
-* `Callback` for date comparison
-
-✔ Frontend = UX
-✔ Backend = data integrity
-
----
-
 ## Project Setup (Docker)
 
 ### 1. Copy environment file:
@@ -119,7 +98,32 @@ This will:
 * build PHP, Nginx, PGAdmin and PostgreSQL containers
 * start all required services
 
+### 3. Wait for the download
+
+You need to wait for all dependencies to load. You can check the "php-fpm2" container logs to determine whether the download is complete. If there are no errors, you should see the message "Starting application..."
+
 ---
+## 🧪 Validation rules
+
+### Frontend
+
+* Required fields
+* Email regex
+* Phone regex: `^\+?[0-9]{9,15}$`
+* Date comparisons
+
+### Backend
+
+* `NotBlank`
+* `Email`
+* `Regex`
+* `Callback` for date comparison
+
+✔ Frontend = UX
+✔ Backend = data integrity
+
+---
+
 
 ## API Usage
 
