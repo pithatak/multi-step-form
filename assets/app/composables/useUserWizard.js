@@ -1,6 +1,6 @@
-import { reactive, ref } from 'vue'
-import { validateUserForm } from '@/validators/userFormValidator'
-import { createUser } from '@/services/userApi'
+import {reactive, ref} from 'vue'
+import {validateUserForm} from '@/validators/userFormValidator'
+import {createUser} from '@/services/userApi'
 
 export function useUserWizard() {
     const step = ref(1)
@@ -63,7 +63,11 @@ export function useUserWizard() {
             submittedData.value = formData
             step.value = 4
         } catch (e) {
-            errors.value = { global: ['Server error'] }
+            if (e.response?.status === 422) {
+                errors.value = e.response.data
+            } else {
+                errors.value = {global: ['Server error']}
+            }
         }
     }
 

@@ -19,7 +19,7 @@
       </div>
 
       <div v-if="errors">
-        <p v-for="(msg, key) in errors" :key="key" class="text-red-500">
+        <p v-for="(msg, key) in errors" :key="key" class="text-red-500 border p-4 mt-6">
           {{ msg[0] }}
         </p>
       </div>
